@@ -69,13 +69,11 @@ class InteractiveCommand:
 
     def wait_until_matched(self, pattern, timeout):
         assert timeout >= 0, "cannot wait until past times"
-        matched = False
         deadline = time.time() + timeout
         output = ''
         while timeout > 0:
             self.wait_for_output(timeout)
             output += self.read_all()
-            print(output)
             re_match = re.search(pattern, output)
             if re_match:
                 return re_match
