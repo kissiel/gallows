@@ -1,3 +1,4 @@
+import logging
 from unittest import TestCase
 
 from interactive_cmd import InteractiveCommand
