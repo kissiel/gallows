@@ -58,12 +58,17 @@ class InteractiveCommand:
             # them (GC race condition?)
             self._logger.debug("Closing pipes...")
             self._close_fds([self._proc.stdin, self._proc.stdout])
+            try:
+                self._logger.debug("Check if process died after closing pipes")
+                retcode = self._proc.wait(timeout=0.1)
+            except subprocess.TimeoutExpired:
+                self._logger.debug("wait() timed out.")
             self._logger.debug("Terminating...")
             self._proc.terminate()
             self._is_running = False
             self._logger.debug("Waiting for process to terminate...")
             self._proc.wait()
-        self._logger.info("Killed.")
+            self._logger.info("Killed.")
 
     def writeline(self, line, sleep=0.1):
         self._logger.info("Writing to process: %s" % line)
