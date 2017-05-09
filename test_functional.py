@@ -8,8 +8,10 @@ class BashTests(TestCase):
     def setUp(self):
         self.ic = InteractiveCommand('bash')
         self.ic.start()
+        logging.disable(logging.CRITICAL)
 
     def tearDown(self):
+        logging.disable(logging.NOTSET)
         self.ic.kill()
 
     def test_echo_smoke(self):
