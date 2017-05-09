@@ -19,8 +19,10 @@ import time
 
 
 class InteractiveCommand:
-    def __init__(self, args, log_level=logging.WARNING, log_name=None):
+    def __init__(self, args, log_level=logging.WARNING, log_name=None,
+                 ignore_eperm=False):
         self._args = args
+        self._ignore_eperm = ignore_eperm
         self._is_running = False
         self._pending = 0
         logger_name = log_name or self._args.split()[0]
@@ -39,7 +41,12 @@ class InteractiveCommand:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.kill()
+        try:
+            self.kill()
+        except PermissionError:
+            if not self._ignore_eperm:
+                raise
+            self._is_running = False
 
     def start(self):
         self._logger.info("Starting command. Args: %s" % self._args)
