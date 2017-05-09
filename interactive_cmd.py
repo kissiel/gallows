@@ -33,7 +33,7 @@ class InteractiveCommand:
         ch.setLevel(log_level)
         formatter = logging.Formatter(
             ("%(asctime)s - %(name)s - %(levelname)s -"
-            " %(message)s"))
+             " %(message)s"))
         ch.setFormatter(formatter)
         self._logger.addHandler(ch)
 
@@ -68,7 +68,7 @@ class InteractiveCommand:
             self._close_fds([self._proc.stdin, self._proc.stdout])
             try:
                 self._logger.debug("Check if process died after closing pipes")
-                retcode = self._proc.wait(timeout=0.1)
+                self._proc.wait(timeout=0.1)
             except subprocess.TimeoutExpired:
                 self._logger.debug("wait() timed out.")
             self._logger.debug("Terminating...")
