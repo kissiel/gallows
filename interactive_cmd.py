@@ -20,9 +20,10 @@ import time
 
 class InteractiveCommand:
     def __init__(self, args, log_level=logging.WARNING, log_name=None,
-                 ignore_eperm=False):
+                 ignore_eperm=False, shell=True):
         self._args = args
         self._ignore_eperm = ignore_eperm
+        self._shell = shell
         self._is_running = False
         self._pending = 0
         logger_name = log_name or self._args.split()[0]
@@ -52,7 +53,7 @@ class InteractiveCommand:
         self._logger.info("Starting command. Args: %s" % self._args)
         self._proc = subprocess.Popen(
             self._args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
+            stderr=subprocess.STDOUT, shell=self._shell)
         self._is_running = True
         self._poller = select.poll()
         self._logger.debug("Registering poller")
